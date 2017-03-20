@@ -1,0 +1,78 @@
+{
+  "name": "refect",
+  "version": "0.1.0-alpha.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "dev": "babel src --out-dir lib -w",
+    "build": "babel src --out-dir lib",
+    "demo": "webpack-dev-server  --progress --port 3030  --colors --content-base demos --hot --inline --config demos/webpack.config.js",
+    "autofix": "eslint src --fix",
+    "lint": "eslint src",
+    "test": "NODE_ENV=test karma start test/karma.conf.js --single-run"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:refect/refect"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "author": "DT",
+  "license": "MIT",
+  "peerDependencies": {
+    "redux": "^2.0.0 || ^3.0.0"
+  },
+  "files": [
+    "src",
+    "lib",
+    "*.md",
+    "utils.js"
+  ],
+  "devDependencies": {
+    "antd": "^2.6.1",
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^6.1.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-import": "^1.1.0",
+    "babel-plugin-module-alias": "^1.6.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "css-loader": "^0.26.1",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.7.0",
+    "eslint-plugin-jsx-a11y": "^1.5.0",
+    "eslint-plugin-react": "^5.2.0",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.0.0",
+    "karma-coveralls": "^1.1.2",
+    "karma-mocha": "^1.3.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.8.0",
+    "mocha": "^3.1.0",
+    "node-sass": "^3.8.0",
+    "pre-commit": "^1.2.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.1",
+    "react-hot-loader": "^3.0.0-beta.6",
+    "react-redux": "^5.0.3",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.7.4",
+    "redux-saga": "^0.13.0",
+    "sass-loader": "^3.2.0",
+    "sinon": "^1.17.7",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
+  }
+}

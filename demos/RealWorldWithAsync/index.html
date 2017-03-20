@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real World</title>
+</head>
+<body>
+  <a href="../">back</a>
+  <div id="app"></div>
+  <script src="./build.js"></script>
+</body>
+<style>
+h1 {
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+ul {
+  list-style: none;
+  overflow: hidden;
+}
+li {
+  width: 100px;
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+.userId {
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+input {
+  width: 200px;
+  padding: 5px 10px;
+  display: block;
+  margin: 0 auto;
+}
+
+.message {
+  position: relative;
+}
+
+.error {
+  position: absolute;
+  color: red;
+  margin-top: 100px;
+  width: 100%;
+  text-align: center;
+}
+
+.spinner {
+  position: absolute;
+  left: 49%;
+  top: 100px;
+  width: 40px;
+  height: 40px;
+  background-color: #91e4be;
+
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+
+@keyframes sk-rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+  } 50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+  } 100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+</style>
+</html>
