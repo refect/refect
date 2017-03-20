@@ -1,11 +1,11 @@
 {
   "name": "refect",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "dev": "babel src --out-dir lib -w",
-    "build": "babel src --out-dir lib",
+    "build": "rm -rf lib && babel src --out-dir lib",
     "demo": "webpack-dev-server  --progress --port 3030  --colors --content-base demos --hot --inline --config demos/webpack.config.js",
     "autofix": "eslint src --fix",
     "lint": "eslint src",
