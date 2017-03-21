@@ -82,9 +82,6 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
   }
 
   function getEffects(namespace, getActions) {
-    const customedEffects = customEffects ?
-      customEffects(getStore, namespace, getActions) : {};
-
     return {
       get(path) {
         const store = getStore();
@@ -115,13 +112,15 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
 
         return worker(actionCreator.task, ...args);
       },
-      ...customedEffects,
     };
   }
 
   middleware.runTask = ({ refectTasks, namespace, getActions, effects }) => {
     const taskActionCreators = parseTasksActions(refectTasks, namespace);
-    const originEffects = getEffects(namespace, getActions);
+    const coreEffects = getEffects(namespace, getActions);
+    const customedEffects = customEffects ?
+      customEffects(getStore, namespace, getActions) : {};
+
     let plugins = {};
 
     if (is.array(effects)) {
@@ -138,7 +137,8 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
     }
 
     const finalEffects = {
-      ...originEffects,
+      ...coreEffects,
+      ...customedEffects,
       ...plugins,
     };
 
@@ -147,7 +147,10 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
         const actions = getActions();
         const dispatch = getStore().dispatch;
         const bundActions = deepBindActions(actions, dispatch);
-        const taskMap = refectTasks(bundActions, finalEffects, originEffects, plugins);
+        const taskMap = refectTasks(bundActions, finalEffects, coreEffects, {
+          ...customedEffects,
+          ...plugins,
+        });
         const task = taskMap[actionName];
 
         return task(...args);
