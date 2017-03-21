@@ -101,6 +101,9 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
 
         return get(state, `${namespace}.${path}`);
       },
+      dispatch(action, ...args) {
+        return getStore().dispatch(action, ...args);
+      },
       watch(pattern, task, ...args) {
         check(is.func(task), 'task in watch should be an function');
 
