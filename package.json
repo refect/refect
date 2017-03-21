@@ -1,6 +1,6 @@
 {
   "name": "refect",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "demo": "webpack-dev-server  --progress --port 3030  --colors --content-base demos --hot --inline --config demos/webpack.config.js",
     "autofix": "eslint src --fix",
     "lint": "eslint src",
+    "prepublish": "npm run build",
     "test": "NODE_ENV=test karma start test/karma.conf.js --single-run"
   },
   "pre-commit": [
