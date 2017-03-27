@@ -221,7 +221,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
 export function assign(source, target) {
   Object.keys(source).forEach(key => {
     if (hasOwnProperty.call(source, key)) {
-      target[key] = source;
+      target[key] = source[key];
     }
   });
 
