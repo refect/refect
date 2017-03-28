@@ -1,23 +1,11 @@
-import { parseRefectActions, parseRefectReducer } from './parseRefect';
+import {
+  parseRefectActions, parseRefectReducer, combineRefectReducer, parseRefectEffects,
+} from './parseRefect';
+
 import { get, check, deepBindActions, is, defaultRefectTasks, getManager } from '../utils';
 
-function combineRefectReducer(...refectReducers) {
-  return (state, manager) => {
-    const refectReducerMaps = refectReducers.map(
-      refectReducer => refectReducer(state, manager));
-
-    return refectReducerMaps.reduce((finalMap, refectReducerMap) => {
-      return {
-        ...finalMap,
-        ...refectReducerMap,
-      };
-    }, {});
-  };
-}
-
-const defaultRefectReducer = defaultRefectTasks;
-const defaultPlugins = defaultRefectTasks;
 const defaultEffects = [];
+const defaultRefectReducer = defaultRefectTasks;
 
 export default function configureRefect({ options, namespace, store, uuid }) {
   const { reducer: refectReducer = defaultRefectReducer, tasks: refectTasks = defaultRefectTasks,
@@ -40,15 +28,18 @@ export default function configureRefect({ options, namespace, store, uuid }) {
 
     check(savedUUID === uuid, errMsg);
   } else {
-    const putinReducers = effects.map(effect => effect.putinReducer || defaultRefectReducer);
-    const finalRefectReducer = combineRefectReducer(refectReducer, ...putinReducers);
+    const rootPutinReducers = store.getRootPutinReducers();
+    const { putinReducers, effectors } = parseRefectEffects(effects);
+
+    const reducers = [refectReducer, ...putinReducers, ...rootPutinReducers];
+    const finalRefectReducer = combineRefectReducer(...reducers);
     const reducerActionCreators = parseRefectActions(finalRefectReducer, namespace);
     const reducer = parseRefectReducer(finalRefectReducer, namespace, initialState);
 
     check(store.runTask, 'store should use a task middleware!');
     const taskActionCreators = store.runTask({
       refectTasks, namespace, getActions,
-      effects: effects.map(effect => effect.plugin || defaultRefectTasks),
+      effectors,
     });
 
     const actionCreators = {

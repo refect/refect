@@ -45,7 +45,7 @@ function wrapPattern(pattern, namespace) {
   return pattern;
 }
 
-function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = defaultWorker) {
+function createTaskMiddleware(rootEffectors, matcher = defaultMatcher, worker = defaultWorker) {
   const listeners = [];
   let effectsStore = null;
 
@@ -101,6 +101,16 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
       dispatch(action, ...args) {
         return getStore().dispatch(action, ...args);
       },
+      put(pattern, ...args) {
+        const actions = getActions();
+        const action = get(actions, pattern);
+
+        if (!action || !action.type) {
+          throw new Error('cannot find action in pattern ' + pattern);
+        }
+
+        return getStore().dispatch(action(...args));
+      },
       watch(pattern, task, ...args) {
         check(is.func(task), 'task in watch should be an function');
 
@@ -115,31 +125,23 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
     };
   }
 
-  middleware.runTask = ({ refectTasks, namespace, getActions, effects }) => {
+  middleware.runTask = ({ refectTasks, namespace, getActions, effectors }) => {
     const taskActionCreators = parseTasksActions(refectTasks, namespace);
     const coreEffects = getEffects(namespace, getActions);
-    const customedEffects = customEffects ?
-      customEffects(getStore, namespace, getActions) : {};
+    const currEffectors = [...rootEffectors, ...effectors];
 
-    let plugins = {};
+    const customEffects = currEffectors.reduce((result, effector) => {
+      const currPlugins = effector({ getActions, namespace, getStore });
 
-    if (is.array(effects)) {
-      plugins = effects.reduce((result, effector) => {
-        const currPlugins = effector({ getActions, namespace, getStore });
-
-        return {
-          ...result,
-          ...currPlugins,
-        };
-      }, {});
-    } else {
-      plugins = effects({ getActions, namespace, getStore });
-    }
+      return {
+        ...result,
+        ...currPlugins,
+      };
+    }, {});
 
     const finalEffects = {
       ...coreEffects,
-      ...customedEffects,
-      ...plugins,
+      ...customEffects,
     };
 
     return map(taskActionCreators, (actionCreator, actionName) => {
@@ -147,10 +149,7 @@ function createTaskMiddleware(customEffects, matcher = defaultMatcher, worker = 
         const actions = getActions();
         const dispatch = getStore().dispatch;
         const bundActions = deepBindActions(actions, dispatch);
-        const taskMap = refectTasks(bundActions, finalEffects, coreEffects, {
-          ...customedEffects,
-          ...plugins,
-        });
+        const taskMap = refectTasks(bundActions, finalEffects, coreEffects, customEffects);
         const task = taskMap[actionName];
 
         return task(...args);

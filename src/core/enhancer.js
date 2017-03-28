@@ -1,25 +1,7 @@
 import { get, set, check, parseActionType, identity, omit } from 'utils';
 import { parseRefectActions, parseRefectReducer } from './parseRefect';
 
-function combineCustomReducer(reducer, customReducers) {
-  return (state, action) => {
-    const { namespace } = parseActionType(action.type);
-    const customReducer = parseRefectReducer(customReducers, namespace);
-
-    const nodeState = get(state, namespace);
-    const newNodeState = customReducer(nodeState, action);
-
-    if (newNodeState !== nodeState) {
-      const newState = set(state, namespace, newNodeState);
-
-      return reducer(newState, action);
-    }
-
-    return reducer(state, action);
-  };
-}
-
-export default function createRefectEnhancer(customReducers) {
+export default function createRefectEnhancer(rootPutinReducers) {
   return function refectEnhancer(createStore) {
     return (reducer, initialState, enhancer) => {
       let currentReducer = reducer;
@@ -27,11 +9,8 @@ export default function createRefectEnhancer(customReducers) {
       let actions = {};
       let uuids = {};
 
-      store.replaceReducer(reducer, combineCustomReducer);
-
       function replaceReducer(nextReducer) {
-        store.replaceReducer(combineCustomReducer(nextReducer, customReducers));
-
+        store.replaceReducer(nextReducer);
         currentReducer = nextReducer;
       }
 
@@ -61,13 +40,8 @@ export default function createRefectEnhancer(customReducers) {
       }
 
       function updateActions(subActions, namespace) {
-        const customActions = parseRefectActions(customReducers, namespace);
-
         if (!namespace) {
-          actions = {
-            ...customActions,
-            ...subActions,
-          };
+          actions = subActions;
 
           return;
         }
@@ -75,10 +49,7 @@ export default function createRefectEnhancer(customReducers) {
         check(!get(actions, namespace),
           `enhancer/updateActions: actions in ${namespace} has existed`);
 
-        actions = set(actions, namespace, {
-          ...customActions,
-          ...subActions,
-        });
+        actions = set(actions, namespace, subActions);
       }
 
       return {
@@ -94,7 +65,10 @@ export default function createRefectEnhancer(customReducers) {
         },
         getUUID(namespace = '') {
           return get(uuids, `${namespace}.uuid`) || '';
-        }
+        },
+        getRootPutinReducers() {
+          return rootPutinReducers;
+        },
       };
     };
   };

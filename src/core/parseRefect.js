@@ -1,6 +1,33 @@
 import { parseActionType, getActionType, map, check, is,
   defaultRefectTasks, noOp, get, assign, getManager } from 'utils';
 
+export function combineRefectReducer(...refectReducers) {
+  return (state, manager) => {
+    const refectReducerMaps = refectReducers.map(
+      refectReducer => refectReducer(state, manager));
+
+    return refectReducerMaps.reduce((finalMap, refectReducerMap) => {
+      return {
+        ...finalMap,
+        ...refectReducerMap,
+      };
+    }, {});
+  };
+}
+
+const defaultRefectReducer = defaultRefectTasks;
+const defaultPlugins = defaultRefectTasks;
+
+export function parseRefectEffects(effects) {
+  const effectors = effects.map(effect => effect.effector || defaultRefectTasks);
+  const putinReducers = effects.map(effect => effect.putinReducer || defaultRefectReducer);
+
+  return {
+    effectors,
+    putinReducers,
+  };
+}
+
 export function parseTasksActions(refectTasks, namespace = '') {
   const tasks = refectTasks({}, {});
 
