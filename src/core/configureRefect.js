@@ -31,7 +31,7 @@ export default function configureRefect({ options, namespace, store, uuid }) {
     const rootPutinReducers = store.getRootPutinReducers();
     const { putinReducers, effectors } = parseRefectEffects(effects);
 
-    const reducers = [refectReducer, ...putinReducers, ...rootPutinReducers];
+    const reducers = [...rootPutinReducers, ...putinReducers, refectReducer];
     const finalRefectReducer = combineRefectReducer(...reducers);
     const reducerActionCreators = parseRefectActions(finalRefectReducer, namespace);
     const reducer = parseRefectReducer(finalRefectReducer, namespace, initialState);
