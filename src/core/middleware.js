@@ -66,7 +66,7 @@ function createTaskMiddleware(rootEffectors, matcher = defaultMatcher, worker = 
   };
 
   function subscribe(pattern, task, ...args) {
-    listeners.push(action => {
+    function listener(action) {
       if (matcher(action, pattern)) {
         const { payload } = action;
 
@@ -74,7 +74,16 @@ function createTaskMiddleware(rootEffectors, matcher = defaultMatcher, worker = 
 
         worker(task, ...args, ...(payload || []));
       }
-    });
+    }
+    listeners.push(listener);
+
+    return () => {
+      const index = listeners.indexOf(listener);
+
+      if (index >= 0) {
+        listeners.splice(index, 1);
+      }
+    };
   }
 
   function getStore() {
@@ -114,7 +123,7 @@ function createTaskMiddleware(rootEffectors, matcher = defaultMatcher, worker = 
       watch(pattern, task, ...args) {
         check(is.func(task), 'task in watch should be an function');
 
-        subscribe(wrapPattern(pattern, namespace), task, ...args);
+        return subscribe(wrapPattern(pattern, namespace), task, ...args);
       },
       done(actionCreator, ...args) {
         check(actionCreator && is.func(actionCreator.task),
