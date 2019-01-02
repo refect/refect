@@ -2,7 +2,7 @@ import createRefectEnhancer from './enhancer';
 import createDefaultTaskMiddleware from './middleware';
 import { compose, applyMiddleware, createStore } from 'redux';
 import { combineRefectReducer, parseRefectEffects } from './parseRefect';
-import { identity } from 'utils';
+import { identity } from '../utils';
 
 const defaultCustom = () => ({});
 const noOp = () => {};

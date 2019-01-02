@@ -1,4 +1,4 @@
-import { get, set, check, parseActionType, identity, omit } from 'utils';
+import { get, set, check, parseActionType, identity, omit } from '../utils';
 import { parseRefectActions, parseRefectReducer } from './parseRefect';
 
 export default function createRefectEnhancer(rootPutinReducers) {

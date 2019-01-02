@@ -1,5 +1,5 @@
 import { parseActionType, getActionType, map, check, is,
-  defaultRefectTasks, noOp, get, assign, getManager } from 'utils';
+  defaultRefectTasks, noOp, get, assign, getManager } from '../utils';
 
 export function combineRefectReducer(...refectReducers) {
   return (state, manager) => {

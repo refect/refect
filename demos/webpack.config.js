@@ -3,7 +3,6 @@ var webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
-  debug: true,
   devtool: '#inline-source-map',
   entry: {
     MultiplePickers: __dirname + '/MultiplePickers/index.js',
@@ -16,13 +15,13 @@ module.exports = {
     filename: '[name]/build.js',
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
   ],
   resolve: {
     alias: {
       'refect': path.join(__dirname, '..', 'src/'),
     },
-    extensions: ['', '.js'],
+    extensions: ['.js'],
   },
 
   stats: {
@@ -31,23 +30,23 @@ module.exports = {
   },
 
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
-      loaders: ['babel-loader'],
+      use: ['babel-loader'],
       include: [
         __dirname,
         path.join(__dirname, '..', 'src'),
       ],
     }, {
       test: /\.scss$/,
-      loaders: ['style', 'css', 'sass'],
+      use: ['style-loader', 'css-loader', 'sass-loader'],
       include: [
         __dirname,
         path.join(__dirname, '..', 'node_modules'),
       ],
     }, {
       test: /\.css$/,
-      loaders: ['style-loader', 'css-loader'],
+      use: ['style-loader', 'css-loader'],
       include: [
         __dirname,
         path.join(__dirname, '..', 'node_modules'),
