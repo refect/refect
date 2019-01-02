@@ -5,8 +5,8 @@ import createLogger from 'redux-logger';
 import { createRefectStore } from 'refect';
 import custom from './custom';
 
-const logger = createLogger();
-const configureStore = compose(applyMiddleware(logger), window.devToolsExtension())(createStore);
+const logger = createLogger(); //, window.devToolsExtension()
+const configureStore = compose(applyMiddleware(logger))(createStore);
 
 export const storeConfig = {
   createStore: configureStore,

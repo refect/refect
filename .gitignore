@@ -5,3 +5,4 @@ test/coverage
 *DS_Store*
 *.orig
 yarn.lock
+package-lock.json

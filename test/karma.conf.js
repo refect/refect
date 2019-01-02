@@ -38,12 +38,12 @@ module.exports = function (config) {
         noParse: [
           /node_modules\/sinon\//,
         ],
-        loaders: [{
+        rules: [{
           test: /\.js$/,
           exclude: [
             path.resolve('node_modules/'),
           ],
-          loader: 'babel',
+          use: ['babel-loader'],
         }],
       },
       externals: {

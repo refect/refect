@@ -1,4 +1,4 @@
-import { get, getActionType, is, check, map, deepBindActions } from 'utils';
+import { get, getActionType, is, check, map, deepBindActions } from '../utils';
 import { parseTasksActions } from './parseRefect';
 
 export function isActionCreator(actionCreator) {

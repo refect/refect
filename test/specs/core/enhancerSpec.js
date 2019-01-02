@@ -57,9 +57,25 @@ describe('enhancer', () => {
   });
 
   it('customReducers', () => {
-    store.dispatch({ type: 'changeData', payload: [[1, 2, 3]] });
+    const initialState = {};
+    const reducerActionCreators = parseRefectActions(customReducers, '');
+    const reducer = parseRefectReducer(customReducers, '', initialState);
+    store.updateRefect({
+      reducer,
+      actions: reducerActionCreators,
+      uuid: Math.random(),
+    });
+    store.dispatch({ type: 'changeData', payload: [[1, 2, 3]]});
     assert.strictEqual(store.getState().data.length, 3);
+
+    const reducerActionCreators1 = parseRefectActions(customReducers, 'pageA');
+    const reducer1 = parseRefectReducer(customReducers, 'pageA', initialState);
+    store.updateRefect({
+      reducer: reducer1,
+      actions: reducerActionCreators1,
+      uuid: Math.random(),
+    });
     store.dispatch({ type: 'pageA/changeData', payload: [[1, 2, 3]] });
-    assert.strictEqual(store.getState().pageA.data.length, 3);
+    assert.strictEqual(store.getState().data.length, 3);
   });
 });

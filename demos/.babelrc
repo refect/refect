@@ -1,12 +1,6 @@
 {
-  "presets": ["react", "es2015", "stage-0"],
+  "presets": ["@babel/preset-react", "@babel/preset-env"],
   "plugins": [
-    ["react-hot-loader/babel"],
-    ["import", { libraryName: "antd", style: "css" }],
-    ["transform-decorators-legacy"],
-    ["module-alias", [
-      { "src": "./src/utils", "expose": "utils" },
-      { "src": "./src/effects", "expose": "effects" },
-    ]]
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
   ]
 }
