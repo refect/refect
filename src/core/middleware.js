@@ -121,7 +121,7 @@ function createTaskMiddleware(rootEffectors, matcher = defaultMatcher, worker = 
         return getStore().dispatch(action(...args));
       },
       watch(pattern, task, ...args) {
-        check(is.func(task), 'task in watch should be an function');
+        check(is.func(task), 'task in watch should be a function');
 
         return subscribe(wrapPattern(pattern, namespace), task, ...args);
       },
